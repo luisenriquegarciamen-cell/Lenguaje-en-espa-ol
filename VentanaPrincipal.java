@@ -1,13 +1,12 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.*;
 
 public class VentanaPrincipal extends JFrame implements ActionListener {
     private JList<String> lista;
-    private JTextArea areaTexto;
-    private JButton btn1, btn2, btn3, btn4;
+    private JTextArea txtArea;
+    private JButton btnAnalizar, btnEjecutar, btnGuardar, btnLimpiar;
 
     public VentanaPrincipal() {
         setTitle("Lenguaje en español");
@@ -47,38 +46,38 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 
         //------------------- BOTONES ----------------------
 
-        btn1 = new JButton("Analizar");
-        btn1.setBounds(210, 80, 140, 40);
-        btn1.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btn1.setFocusPainted(false);
-        btn1.addActionListener(this);
-        panel.add(btn1);
-        btn2 = new JButton("Ejecutar");
-        btn2.setBounds(210, 140, 140, 40);
-        btn2.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btn2.setFocusPainted(false);
-        btn1.addActionListener(this);
-        panel.add(btn2);
-        btn3 = new JButton("Limpiar");
-        btn3.setBounds(210, 200, 140, 40);
-        btn3.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btn3.setFocusPainted(false);
-        btn1.addActionListener(this);
-        panel.add(btn3);
-        btn4 = new JButton("Guardar");
-        btn4.setBounds(210, 260, 140, 40);
-        btn4.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btn4.setFocusPainted(false);
-        btn1.addActionListener(this);
-        panel.add(btn4);
+        btnAnalizar = new JButton("Analizar");
+        btnAnalizar.setBounds(210, 80, 140, 40);
+        btnAnalizar.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnAnalizar.setFocusPainted(false);
+        btnAnalizar.addActionListener(this);
+        panel.add(btnAnalizar);
+        btnEjecutar = new JButton("Ejecutar");
+        btnEjecutar.setBounds(210, 140, 140, 40);
+        btnEjecutar.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnEjecutar.setFocusPainted(false);
+        btnEjecutar.addActionListener(this);
+        panel.add(btnEjecutar);
+        btnGuardar = new JButton("Guardar");
+        btnGuardar.setBounds(210, 260, 140, 40);
+        btnGuardar.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnGuardar.setFocusPainted(false);
+        btnGuardar.addActionListener(this);
+        panel.add(btnGuardar);
+        btnLimpiar = new JButton("Limpiar");
+        btnLimpiar.setBounds(210, 200, 140, 40);
+        btnLimpiar.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btnLimpiar.setFocusPainted(false);
+        btnLimpiar.addActionListener(this);
+        panel.add(btnLimpiar);
 
         //------------------ TEXT AREA ---------------------
 
-        areaTexto = new JTextArea();
-        areaTexto.setEditable(true);
-        areaTexto.setFont(new Font("Consolas", Font.PLAIN, 15));
+        txtArea = new JTextArea();
+        txtArea.setEditable(true);
+        txtArea.setFont(new Font("Consolas", Font.PLAIN, 15));
 
-        JScrollPane scrollArea = new JScrollPane(areaTexto);
+        JScrollPane scrollArea = new JScrollPane(txtArea);
 
         // Ocupa prácticamente toda la mitad derecha
         scrollArea.setBounds(410, 20, 400, 420);
@@ -90,7 +89,18 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        //------------- PENDIENTE POR HACER -----------------
+        if (e.getSource() == btnAnalizar) {
+
+        }
+        if (e.getSource() == btnEjecutar) {
+
+        }
+        if (e.getSource() == btnGuardar) {
+
+        }
+        if (e.getSource() == btnLimpiar) {
+            txtArea.setText("");
+        }
     }
 
     public static void main(String[] args) {
