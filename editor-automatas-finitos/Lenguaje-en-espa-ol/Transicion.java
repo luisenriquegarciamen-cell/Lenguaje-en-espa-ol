@@ -6,6 +6,12 @@ public class Transicion{
         this.destino=destino;
         this.simbolo=simbolo;
     }
+    public boolean coincideCon(char c) {
+        if (this.simbolo == '.') {
+            return true; 
+        }
+        return this.simbolo == c;
+    }
     public void dibujado(Graphics2D g2d){
         g2d.setColor(Color.BLACK);
         g2d.setStroke(new BasicStroke(2));
