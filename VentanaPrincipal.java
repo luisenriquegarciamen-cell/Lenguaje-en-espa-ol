@@ -8,8 +8,10 @@ import java.io.File;
 
 public class VentanaPrincipal extends JFrame implements ActionListener {
     private JList<String> lista;
+    private DefaultListModel<String> modeloLista;
     private JTextArea txtArea;
     private JButton btnAnalizar, btnEjecutar, btnGuardar, btnLimpiar;
+    private JFrame ventanaGrafos;
 
     public VentanaPrincipal() {
         setTitle("Lenguaje en español");
@@ -23,23 +25,14 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         panel.setBackground(new Color(245,245,245));
 
         //------------------- TÍTULO -----------------------
-
         JLabel titulo = new JLabel("Procesamiento de Datos");
         titulo.setFont(new Font("Segoe UI", Font.BOLD, 22));
         titulo.setBounds(25, 15, 350, 35);
         panel.add(titulo);
 
         //------------------- JLIST ------------------------
-
-        String datos[] = {
-            "Linea 1",
-            "Linea 2",
-            "Linea 3",
-            "Linea 4",
-            "Linea 5"
-        };
-
-        lista = new JList<>(datos);
+        modeloLista = new DefaultListModel<>();
+        lista = new JList<>(modeloLista);
         lista.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         lista.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 
@@ -48,7 +41,6 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         panel.add(scrollLista);
 
         //------------------- BOTONES ----------------------
-
         btnAnalizar = new JButton("Analizar");
         btnAnalizar.setBounds(210, 80, 140, 40);
         btnAnalizar.setFont(new Font("Segoe UI", Font.BOLD, 14));
@@ -78,18 +70,27 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         panel.add(btnLimpiar);
 
         //------------------ TEXT AREA ---------------------
-
         txtArea = new JTextArea();
         txtArea.setEditable(true);
         txtArea.setFont(new Font("Consolas", Font.PLAIN, 15));
 
-        JScrollPane scrollArea = new JScrollPane(txtArea);
+        txtArea.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                actualizarLineas();
+            }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                actualizarLineas();
+            }
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                actualizarLineas();
+            }
+        });
 
-        // Ocupa prácticamente toda la mitad derecha
+        JScrollPane scrollArea = new JScrollPane(txtArea);
+        // Ocupa practicamente toda la mitad derecha
         scrollArea.setBounds(410, 20, 400, 420);
 
         panel.add(scrollArea);
-
         add(panel);
     }
 
@@ -97,7 +98,30 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         //---------------- Boton Analizar -------------------
         if (e.getSource() == btnAnalizar) {
+            ventanaGrafos = new JFrame("Grafo del Autómata");
+            ventanaGrafos.setSize(900, 600);
+            ventanaGrafos.setLocationRelativeTo(null);
+            ventanaGrafos.setResizable(false);
+            ventanaGrafos.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 
+            // Panel donde después se dibujarán los grafos
+            JPanel panelGrafos = new JPanel();
+            panelGrafos.setLayout(null);
+            panelGrafos.setBackground(Color.WHITE);
+
+            // Título
+            JLabel lblTitulo = new JLabel("Visualización del Autómata Finito");
+            lblTitulo.setFont(new Font("Segoe UI", Font.BOLD, 22));
+            lblTitulo.setBounds(20, 15, 400, 30);
+            panelGrafos.add(lblTitulo);
+
+            // Separador
+            JSeparator separador = new JSeparator();
+            separador.setBounds(20, 55, 840, 2);
+            panelGrafos.add(separador);
+
+            ventanaGrafos.add(panelGrafos);
+            ventanaGrafos.setVisible(true);
         }
 
         //---------------- Boton Ejecutar -------------------
@@ -158,4 +182,17 @@ public class VentanaPrincipal extends JFrame implements ActionListener {
         v.setVisible(true);
     }
 
+    private void actualizarLineas() {
+        modeloLista.clear();
+
+        String texto = txtArea.getText();
+        if (texto.isEmpty()) {
+            return;
+        }
+        String[] lineas = texto.split("\n", -1);
+
+        for (int i = 0; i < lineas.length; i++) {
+            modeloLista.addElement("Línea " + (i + 1));
+        }
+    }
 }
