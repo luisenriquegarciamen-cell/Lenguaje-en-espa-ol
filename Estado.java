@@ -88,13 +88,11 @@ public class Estado {
     public boolean isEsInicial() {
         return esInicial;
     }
-
+    public boolean isEsError() { 
+        return esError; 
+    }
     public boolean isEsAceptacion() {
         return esAceptacion;
-    }
-
-    public boolean isEsError() {
-        return esError;
     }
 
     public int getX() {

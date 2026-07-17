@@ -42,7 +42,11 @@ public class Automata {
             tipoDFA = "Numero";
             construirDFANumero();
             ejecutarDFA(tokens);
-        } else if (primerToken.equals("Si")) {
+        } else if (primerToken.equals("Cadena")) {
+            tipoDFA = "Cadena";
+            construirDFACadena();
+            ejecutarDFA(tokens);
+        }else if (primerToken.equals("Si")) {
             tipoDFA = "Si";
             construirDFASi();
             ejecutarDFA(tokens);
@@ -70,19 +74,42 @@ public class Automata {
 
     private String clasificarToken(String token) {
         if (token.equals("Numero")) return "Numero";
+        if (token.equals("Cadena")) return "Cadena";
         if (token.equals("Si")) return "Si";
         if (token.equals("SiNo")) return "SiNo";
         if (token.equals("=")) return "=";
         if (token.equals("(")) return "(";
         if (token.equals(")")) return ")";
         if (token.equals("<") || token.equals(">") || token.equals("<=") || token.equals(">=")) return "relacion";
+        if (token.startsWith("\"") && token.endsWith("\"")) return "CadenaLiteral";
         if (token.matches("-?\\d+(\\.\\d+)?")) return "NumeroLiteral";
         if (token.matches("[a-zA-Z_][a-zA-Z0-9_]*")) return "id";
         return "desconocido";
     }
 
     // ---------------- CONSTRUCCIÓN DE LOS DFA ----------------
+    private void construirDFACadena() {
+        // Grafo que soporta tanto "Cadena x" como "Cadena x = \"hola\""
+        Estado c0 = new Estado("c0", true, false, false, 50, 100);
+        Estado c1 = new Estado("c1", false, false, false, 170, 100);
+        Estado c2 = new Estado("c2", false, true, false, 290, 100);  // Aceptación si es solo declaración "Cadena x"
+        Estado c3 = new Estado("c3", false, false, false, 410, 100);
+        Estado c4 = new Estado("c4", false, true, false, 530, 100);  // Aceptación si se le asigna un string
+        Estado ce = new Estado("ce", false, false, true, 290, 220);
 
+        estados.add(c0);
+        estados.add(c1);
+        estados.add(c2);
+        estados.add(c3);
+        estados.add(c4);
+        estados.add(ce);
+
+        transiciones.add(new Transicion(c0, c1, "Cadena"));
+        transiciones.add(new Transicion(c1, c2, "id"));
+        transiciones.add(new Transicion(c2, c3, "="));
+        transiciones.add(new Transicion(c3, c4, "CadenaLiteral"));
+        transiciones.add(new Transicion(c3, c4, "id"));
+    }
     private void construirDFANumero() {
         Estado q0 = new Estado("q0", true, false, false, 50, 100);
         Estado q1 = new Estado("q1", false, false, false, 170, 100);
@@ -108,7 +135,6 @@ public class Automata {
     private void construirDFASi() {
         Estado s0 = new Estado("s0", true, false, false, 50, 120);
         Estado s1 = new Estado("s1", false, false, false, 130, 120);
-
         Estado s2_par = new Estado("s2_p", false, false, false, 210, 60);
         Estado s3_par = new Estado("s3_p", false, false, false, 290, 60);
         Estado s4_par = new Estado("s4_p", false, false, false, 370, 60);
@@ -120,17 +146,9 @@ public class Automata {
         Estado s4_nopar = new Estado("s4", false, true, false, 450, 180);
         Estado se = new Estado("se", false, false, true, 290, 280);
 
-        estados.add(s0);
-        estados.add(s1);
-        estados.add(s2_par);
-        estados.add(s3_par);
-        estados.add(s4_par);
-        estados.add(s5_par);
-        estados.add(s6_par);
-        estados.add(s2_nopar);
-        estados.add(s3_nopar);
-        estados.add(s4_nopar);
-        estados.add(se);
+        estados.add(s0); estados.add(s1); estados.add(s2_par); estados.add(s3_par);
+        estados.add(s4_par); estados.add(s5_par); estados.add(s6_par);
+        estados.add(s2_nopar); estados.add(s3_nopar); estados.add(s4_nopar); estados.add(se);
 
         transiciones.add(new Transicion(s0, s1, "Si"));
         transiciones.add(new Transicion(s1, s2_par, "("));
@@ -153,11 +171,16 @@ public class Automata {
         Estado e1 = new Estado("e1", false, true, false, 280, 100);
         Estado ee = new Estado("ee", false, false, true, 180, 200);
 
-        estados.add(e0);
-        estados.add(e1);
-        estados.add(ee);
-
+        estados.add(e0); estados.add(e1); estados.add(ee);
         transiciones.add(new Transicion(e0, e1, "SiNo"));
+    }
+
+    private void construirDFADesconocido(String primerToken) {
+        Estado d0 = new Estado("d0", true, false, false, 100, 100);
+        Estado de = new Estado("de", false, false, true, 300, 100);
+
+        estados.add(d0); estados.add(de);
+        transiciones.add(new Transicion(d0, de, primerToken));
     }
 
     private void construirDFADesconocido(String primerToken) {
@@ -261,3 +284,5 @@ public class Automata {
     public String getTipoDFA() {
         return tipoDFA;
     }
+
+}
